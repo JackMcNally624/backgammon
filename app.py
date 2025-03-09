@@ -35,6 +35,10 @@ class Game(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     winner_points = db.Column(db.Integer, nullable=False)
     loser_points = db.Column(db.Integer, nullable=False)
+    
+    # Add relationships with unique backref names
+    winner = db.relationship('User', foreign_keys=[winner_id], backref=db.backref('won_games', lazy='dynamic'))
+    loser = db.relationship('User', foreign_keys=[loser_id], backref=db.backref('lost_games', lazy='dynamic'))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -49,7 +53,7 @@ def calculate_elo_change(winner_rating, loser_rating, k=32):
 def index():
     top_players = User.query.order_by(User.elo_rating.desc()).limit(10).all()
     recent_games = Game.query.order_by(Game.date.desc()).limit(5).all()
-    return render_template('index.html', top_players=top_players, recent_games=recent_games)
+    return render_template('index.html', top_players=top_players, recent_games=recent_games, User=User)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -140,4 +144,4 @@ def log_game():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True) 
+    app.run(debug=True, port=5001) 

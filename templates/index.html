@@ -86,9 +86,9 @@
                         {% for game in recent_games %}
                         <tr>
                             <td>{{ game.date.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ User.query.get(game.winner_id).username }}</td>
+                            <td>{{ game.winner.username }}</td>
                             <td>{{ game.winner_points }} - {{ game.loser_points }}</td>
-                            <td>{{ User.query.get(game.loser_id).username }}</td>
+                            <td>{{ game.loser.username }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
