@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Game - Backgammon Rankings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Backgammon Rankings</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('log_game') }}">Log Game</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="content-section form-section">
+            <h2>Log a Game</h2>
+            <form method="POST" action="{{ url_for('log_game') }}">
+                <div class="form-group">
+                    <label for="opponent">Opponent:</label>
+                    <select id="opponent" name="opponent" required>
+                        <option value="">Select opponent</option>
+                        {% for user in users %}
+                        <option value="{{ user.username }}">{{ user.username }} (Rating: {{ user.elo_rating|round|int }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Winner:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="winner_me" name="winner" value="me" required>
+                        <label for="winner_me">I won</label>
+                        <input type="radio" id="winner_opponent" name="winner" value="opponent">
+                        <label for="winner_opponent">Opponent won</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="winner_points">Winner Points:</label>
+                    <input type="number" id="winner_points" name="winner_points" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="loser_points">Loser Points:</label>
+                    <input type="number" id="loser_points" name="loser_points" min="0" required>
+                </div>
+                <button type="submit" class="btn">Log Game</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Backgammon Rankings. All rights reserved.</p>
+    </footer>
+</body>
+</html> 

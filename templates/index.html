@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backgammon Rankings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Backgammon Rankings</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('log_game') }}">Log Game</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('register') }}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section id="home" class="hero">
+            <h1>Welcome to Backgammon Rankings</h1>
+            <p>Track your games, improve your rating, and compete with other players!</p>
+            {% if current_user.is_authenticated %}
+            <div class="user-stats">
+                <p>Your Rating: {{ current_user.elo_rating|round|int }}</p>
+                <p>Games Played: {{ current_user.games_played }}</p>
+                <p>Games Won: {{ current_user.games_won }}</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section id="rankings" class="content-section">
+            <h2>Top Players</h2>
+            <div class="rankings-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Rating</th>
+                            <th>Games</th>
+                            <th>Wins</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in top_players %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ player.username }}</td>
+                            <td>{{ player.elo_rating|round|int }}</td>
+                            <td>{{ player.games_played }}</td>
+                            <td>{{ player.games_won }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="recent-games" class="content-section">
+            <h2>Recent Games</h2>
+            <div class="games-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Winner</th>
+                            <th>Score</th>
+                            <th>Loser</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in recent_games %}
+                        <tr>
+                            <td>{{ game.date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ User.query.get(game.winner_id).username }}</td>
+                            <td>{{ game.winner_points }} - {{ game.loser_points }}</td>
+                            <td>{{ User.query.get(game.loser_id).username }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Backgammon Rankings. All rights reserved.</p>
+    </footer>
+</body>
+</html> 
