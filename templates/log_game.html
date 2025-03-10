@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Game - Backgammon Rankings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="nav-brand">Backgammon Rankings</div>
@@ -18,11 +20,11 @@
 
     <main>
         {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
         <section class="content-section form-section">
@@ -33,7 +35,8 @@
                     <select id="opponent" name="opponent" required>
                         <option value="">Select opponent</option>
                         {% for user in users %}
-                        <option value="{{ user.username }}">{{ user.username }} (Rating: {{ user.elo_rating|round|int }})</option>
+                        <option value="{{ user.username }}">{{ user.username }} (Rating: {{ user.elo_rating|round|int
+                            }})</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -50,10 +53,6 @@
                     <label for="winner_points">Winner Points:</label>
                     <input type="number" id="winner_points" name="winner_points" min="1" required>
                 </div>
-                <div class="form-group">
-                    <label for="loser_points">Loser Points:</label>
-                    <input type="number" id="loser_points" name="loser_points" min="0" required>
-                </div>
                 <button type="submit" class="btn">Log Game</button>
             </form>
         </section>
@@ -63,4 +62,5 @@
         <p>&copy; 2024 Backgammon Rankings. All rights reserved.</p>
     </footer>
 </body>
-</html> 
+
+</html>

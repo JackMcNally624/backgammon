@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///backgammon.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///backgammon_new.db')
 app.config['SECURITY_PASSWORD_SALT'] = 'your-salt-here'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -34,7 +34,7 @@ class Game(db.Model):
     loser_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     winner_points = db.Column(db.Integer, nullable=False)
-    loser_points = db.Column(db.Integer, nullable=False)
+    loser_points = db.Column(db.Integer, nullable=True)  # Make it nullable
     
     # Add relationships with unique backref names
     winner = db.relationship('User', foreign_keys=[winner_id], backref=db.backref('won_games', lazy='dynamic'))
@@ -102,7 +102,6 @@ def log_game():
         opponent_username = request.form.get('opponent')
         winner = request.form.get('winner')
         winner_points = int(request.form.get('winner_points'))
-        loser_points = int(request.form.get('loser_points'))
         
         opponent = User.query.filter_by(username=opponent_username).first()
         if not opponent:
@@ -129,8 +128,7 @@ def log_game():
         game = Game(
             winner_id=winner_id,
             loser_id=loser_id,
-            winner_points=winner_points,
-            loser_points=loser_points
+            winner_points=winner_points
         )
         
         db.session.add(game)

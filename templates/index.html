@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backgammon Rankings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="nav-brand">Backgammon Rankings</div>
@@ -23,11 +25,11 @@
 
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert {{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
         <section id="home" class="hero">
@@ -87,7 +89,7 @@
                         <tr>
                             <td>{{ game.date.strftime('%Y-%m-%d') }}</td>
                             <td>{{ game.winner.username }}</td>
-                            <td>{{ game.winner_points }} - {{ game.loser_points }}</td>
+                            <td>{{ game.winner_points }}</td>
                             <td>{{ game.loser.username }}</td>
                         </tr>
                         {% endfor %}
@@ -101,4 +103,5 @@
         <p>&copy; 2024 Backgammon Rankings. All rights reserved.</p>
     </footer>
 </body>
-</html> 
+
+</html>
